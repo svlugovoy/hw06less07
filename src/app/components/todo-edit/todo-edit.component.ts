@@ -29,14 +29,16 @@ export class TodoEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.editForm = new FormGroup({
+      title: new FormControl({value: '', disabled: true}, [Validators.required, Validators.minLength(3)]),
+      completed: new FormControl({value: false, disabled: true}, [Validators.required, Validators.pattern('^(true|false)$')])
+    });
     this.spinner.show();
     this.todoId = this.activatedRoute.snapshot.params['id'];
     this.todoService.getTodoById(this.todoId).subscribe((resp: Todo) => {
         this.todo = resp;
-        this.editForm = new FormGroup({
-          title: new FormControl({value: resp.title, disabled: true}, [Validators.required, Validators.minLength(3)]),
-          completed: new FormControl({value: resp.completed, disabled: true}, [Validators.required, Validators.pattern('^(true|false)$')])
-        });
+        this.editForm.get('title').setValue(resp.title);
+        this.editForm.get('completed').setValue(resp.completed);
       },
       (error) => {
         this.toastr.error(error.message, 'Error!');
@@ -50,12 +52,14 @@ export class TodoEditComponent implements OnInit {
   onCancel() {
     this.spinner.show();
     this.isReadOnly = true;
+    this.editForm = new FormGroup({
+      title: new FormControl({value: '', disabled: true}, [Validators.required, Validators.minLength(3)]),
+      completed: new FormControl({value: false, disabled: true}, [Validators.required, Validators.pattern('^(true|false)$')])
+    });
     this.todoService.getTodoById(this.todoId).subscribe((resp: Todo) => {
         this.todo = resp;
-        this.editForm = new FormGroup({
-          title: new FormControl({value: resp.title, disabled: true}, [Validators.required, Validators.minLength(3)]),
-          completed: new FormControl({value: resp.completed, disabled: true}, [Validators.required, Validators.pattern('^(true|false)$')])
-        });
+        this.editForm.get('title').setValue(resp.title);
+        this.editForm.get('completed').setValue(resp.completed);
         this.isReadOnly = true;
         this.toastr.info('Update is canceled.', 'Canceled!');
       },

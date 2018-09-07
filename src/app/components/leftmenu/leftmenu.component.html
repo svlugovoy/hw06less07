@@ -23,7 +23,7 @@
 
   <hr>
 
-  <p>Total Todos: {{ todosCount }}</p>
+  <p *ngIf="isAuth">Total Todos: {{ todosCount }}</p>
 
   <p  *ngIf="isAuth">Hi, you are logged as: {{ currentUser }}</p>
 
